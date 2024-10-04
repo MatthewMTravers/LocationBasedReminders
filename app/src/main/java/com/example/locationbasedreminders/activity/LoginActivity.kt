@@ -1,7 +1,9 @@
 package com.example.locationbasedreminders.activity
 
 import AccountFragment
+import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.locationbasedreminders.R
 import com.example.locationbasedreminders.fragment.LoginFragment
@@ -28,5 +30,13 @@ class LoginActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, AccountFragment())
             .addToBackStack(null)
             .commit()
+    }
+
+    fun exitNewAccount(){
+        setContentView(R.layout.activity_login)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, LoginFragment())
+            .commitNow()
+        Log.d("ExitLogin", "User clicked exit account creation, return to login")
     }
 }
