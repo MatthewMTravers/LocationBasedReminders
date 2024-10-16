@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -61,6 +62,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.play.services.maps)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,4 +71,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
+
+    // Used for location services
+    implementation(libs.play.services.location)
+
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation(libs.firebase.analytics)
 }

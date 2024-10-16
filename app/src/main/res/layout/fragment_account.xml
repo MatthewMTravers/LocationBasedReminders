@@ -92,7 +92,7 @@
         android:layout_margin="16dp">
 
         <Button
-            android:id="@+id/cancel_button"
+            android:id="@+id/clear_button"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
