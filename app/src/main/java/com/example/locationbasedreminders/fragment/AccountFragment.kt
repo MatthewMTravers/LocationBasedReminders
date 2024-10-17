@@ -24,8 +24,10 @@ class AccountFragment : Fragment(), View.OnClickListener {
     private lateinit var newUserButton: Button
     private lateinit var clearButton: Button
     private lateinit var exitButton: Button
+    private lateinit var readButton: Button
+    private lateinit var updateButton: Button
     private lateinit var deleteButton: Button
-    private lateinit var currentUseId: String
+    private lateinit var currentUserId: String
     private val db = Firebase.firestore
 
     override fun onCreateView(
@@ -39,13 +41,21 @@ class AccountFragment : Fragment(), View.OnClickListener {
         passwordEditText = view.findViewById(R.id.password)
         passwordConfirmEditText = view.findViewById(R.id.password_confirm)
 
+        // Clear Button
+        clearButton = view.findViewById(R.id.clear_button)
+        clearButton.setOnClickListener(this)
+
         // Create Button
         newUserButton = view.findViewById(R.id.create_button)
         newUserButton.setOnClickListener(this)
 
-        // Clear Button
-        clearButton = view.findViewById(R.id.clear_button)
-        clearButton.setOnClickListener(this)
+        // TEMPORARY: Read Button
+        readButton = view.findViewById(R.id.read_button)
+        readButton.setOnClickListener(this)
+
+        // TEMPORARY: Update Button
+        updateButton = view.findViewById(R.id.update_button)
+        updateButton.setOnClickListener(this)
 
         // TEMPORARY: Delete Button
         deleteButton = view.findViewById(R.id.delete_button)
@@ -56,8 +66,12 @@ class AccountFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View) {
         when (view.id) {
+            // CRUD functionality
             R.id.create_button -> createAccount()
+            R.id.read_button -> getSingleUser()
+            R.id.update_button -> updateSingleUser()
             R.id.delete_button -> deleteAllDocumentsFromCollection()
+
             R.id.clear_button -> {
                 usernameEditText.text.clear()
                 passwordEditText.text.clear()
@@ -79,22 +93,21 @@ class AccountFragment : Fragment(), View.OnClickListener {
             Toast.makeText(requireContext(), "Passwords do not match!", Toast.LENGTH_SHORT).show()
         } else {
             // Generate a unique user ID using UUID
-            this.currentUseId = UUID.randomUUID().toString()
+            this.currentUserId = UUID.randomUUID().toString()
 
             val user = hashMapOf(
-                "userId" to this.currentUseId ,
+                "userId" to this.currentUserId ,
                 "username" to username,
                 "password" to password
             )
 
-            // TEMPORARY: adds user to the collection
+            // Adds user to the collection
             db.collection("users")
                 .add(user)
                 .addOnSuccessListener {
-                    Log.d(TAG, "User created with ID: $this.currentUseId ")
                     Toast.makeText(
                         activity,
-                        "User created successfully with ID: $this.currentUseId ",
+                        "User created successfully with ID: $this.$currentUserId ",
                         Toast.LENGTH_SHORT
                     ).show()
                 }.addOnFailureListener { e ->
@@ -109,6 +122,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
             db.collection("users")
                 .get()
                 .addOnSuccessListener { result ->
+                    Log.d(TAG, "ENTRIES IN TABLE:")
                     for (document in result) {
                         Log.d(TAG, "${document.id} => ${document.data}")
                     }
@@ -129,7 +143,54 @@ class AccountFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    // TEMPORARY
+    // TEMPORARY: performs a 'READ' and logs current users
+    private fun getSingleUser() {
+        db.collection("users")
+            .get()
+            .addOnSuccessListener { result ->
+                Log.d(TAG, "SINGLE VALUE:")
+                for (document in result) {
+                    val data = document.data
+                    val userId = data["userId"] as? String
+                    if (userId == this.currentUserId) {
+                        Log.d(TAG, "${document.id} => ${document.data}")
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
+    }
+
+    // TEMPORARY: performs an 'UPDATE' and logs current users
+    private fun updateSingleUser() {
+        this.currentUserId.let {
+            // Gets new info from TextInputs
+            val username = usernameEditText.text.toString()
+            val password = passwordEditText.text.toString()
+
+            db.collection("users")
+                .whereEqualTo("userId", it)
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        db.collection("users").document(document.id)
+                            .update("username", username, "password", password)
+                            .addOnSuccessListener {
+                                Toast.makeText(requireContext(), "User updated successfully!", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(requireContext(), "Error updating user: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents.", exception)
+                }
+        } ?: Toast.makeText(requireContext(), "No user ID available for updating!", Toast.LENGTH_SHORT).show()
+    }
+
+    // TEMPORARY: deletes ALL entries in table
     private fun deleteAllDocumentsFromCollection() {
         db.collection("users")
             .get()
@@ -137,14 +198,14 @@ class AccountFragment : Fragment(), View.OnClickListener {
                 for (document in result) {
                     db.collection("users").document(document.id).delete()
                         .addOnSuccessListener {
-                            println("Document with ID ${document.id} deleted")
+                            Log.d(TAG, "Document with ID ${document.id} deleted")
                         }
                         .addOnFailureListener { e ->
-                            println("Error deleting document: $e")
+                            Log.d(TAG, "Error deleting document: $e")
                         }
                 }
             }.addOnFailureListener { e ->
-                println("Error getting documents: $e")
+                Log.d(TAG, "Error getting documents: $e")
             }
     }
 }
