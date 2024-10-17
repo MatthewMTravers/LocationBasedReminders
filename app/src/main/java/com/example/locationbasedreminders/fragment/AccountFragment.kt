@@ -1,3 +1,5 @@
+package com.example.locationbasedreminders.fragment
+
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
@@ -34,7 +36,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
         passwordConfirmEditText = view.findViewById(R.id.password_confirm)
 
         // Create Button
-        newUserButton = view.findViewById(R.id.done_button)
+        newUserButton = view.findViewById(R.id.create_button)
         newUserButton.setOnClickListener(this)
         // Clear Button
         clearButton = view.findViewById(R.id.clear_button)
@@ -45,7 +47,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.done_button -> createAccount()
+            R.id.create_button -> createAccount()
             R.id.clear_button -> {
                 usernameEditText.text.clear()
                 passwordEditText.text.clear()

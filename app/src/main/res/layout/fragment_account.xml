@@ -102,7 +102,7 @@
             android:text="@string/clear" />
 
         <Button
-            android:id="@+id/done_button"
+            android:id="@+id/create_button"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
