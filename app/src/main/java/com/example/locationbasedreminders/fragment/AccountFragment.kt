@@ -15,6 +15,7 @@ import com.example.locationbasedreminders.R.*
 import com.example.locationbasedreminders.activity.LoginActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.UUID
 
 class AccountFragment : Fragment(), View.OnClickListener {
     private lateinit var usernameEditText: EditText
@@ -23,6 +24,9 @@ class AccountFragment : Fragment(), View.OnClickListener {
     private lateinit var newUserButton: Button
     private lateinit var clearButton: Button
     private lateinit var exitButton: Button
+    private lateinit var deleteButton: Button
+    private lateinit var currentUseId: String
+    private val db = Firebase.firestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,9 +42,14 @@ class AccountFragment : Fragment(), View.OnClickListener {
         // Create Button
         newUserButton = view.findViewById(R.id.create_button)
         newUserButton.setOnClickListener(this)
+
         // Clear Button
         clearButton = view.findViewById(R.id.clear_button)
         clearButton.setOnClickListener(this)
+
+        // TEMPORARY: Delete Button
+        deleteButton = view.findViewById(R.id.delete_button)
+        deleteButton.setOnClickListener(this)
 
         return view
     }
@@ -48,6 +57,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View) {
         when (view.id) {
             R.id.create_button -> createAccount()
+            R.id.delete_button -> deleteAllDocumentsFromCollection()
             R.id.clear_button -> {
                 usernameEditText.text.clear()
                 passwordEditText.text.clear()
@@ -62,44 +72,52 @@ class AccountFragment : Fragment(), View.OnClickListener {
         val password = passwordEditText.text.toString()
         val passwordConfirm = passwordConfirmEditText.text.toString()
 
-        // Create instance of firebase DB
-        val db = Firebase.firestore
-
         // Validate user inputs
         if (username.isEmpty() || password.isEmpty() || passwordConfirm.isEmpty()) {
             Toast.makeText(requireContext(), "All fields are required!", Toast.LENGTH_SHORT).show()
         } else if (password != passwordConfirm) {
             Toast.makeText(requireContext(), "Passwords do not match!", Toast.LENGTH_SHORT).show()
         } else {
+            // Generate a unique user ID using UUID
+            this.currentUseId = UUID.randomUUID().toString()
+
             val user = hashMapOf(
+                "userId" to this.currentUseId ,
                 "username" to username,
                 "password" to password
             )
 
-            // Add the user to Fire store with an auto-generated document ID
+            // TEMPORARY: adds user to the collection
             db.collection("users")
                 .add(user)
-                .addOnSuccessListener { documentReference ->
-                    val generatedUserId = documentReference.id  // Get the generated ID
-                    Log.d(TAG, "User created with ID: $generatedUserId")
+                .addOnSuccessListener {
+                    Log.d(TAG, "User created with ID: $this.currentUseId ")
                     Toast.makeText(
                         activity,
-                        "User created successfully with ID: $generatedUserId",
+                        "User created successfully with ID: $this.currentUseId ",
                         Toast.LENGTH_SHORT
                     ).show()
-
-                    // Optionally, store this ID or use it for further actions
-                }
-                .addOnFailureListener { e ->
+                }.addOnFailureListener { e ->
                     Toast.makeText(
                         activity,
                         "Error creating user: ${e.message}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+
+            // TEMPORARY: performs a 'READ' and logs all users
+            db.collection("users")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        Log.d(TAG, "${document.id} => ${document.data}")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents.", exception)
+                }
         }
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -111,7 +129,24 @@ class AccountFragment : Fragment(), View.OnClickListener {
         }
     }
 
-
+    // TEMPORARY
+    private fun deleteAllDocumentsFromCollection() {
+        db.collection("users")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    db.collection("users").document(document.id).delete()
+                        .addOnSuccessListener {
+                            println("Document with ID ${document.id} deleted")
+                        }
+                        .addOnFailureListener { e ->
+                            println("Error deleting document: $e")
+                        }
+                }
+            }.addOnFailureListener { e ->
+                println("Error getting documents: $e")
+            }
+    }
 }
 
 

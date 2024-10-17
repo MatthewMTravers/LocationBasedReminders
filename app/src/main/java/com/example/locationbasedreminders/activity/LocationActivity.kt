@@ -1,6 +1,6 @@
 package com.example.locationbasedreminders.activity
 
-import LocationFragment
+import com.example.locationbasedreminders.fragment.LocationFragment
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.locationbasedreminders.R

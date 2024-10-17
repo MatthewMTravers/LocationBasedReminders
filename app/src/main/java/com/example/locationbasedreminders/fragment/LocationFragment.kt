@@ -1,3 +1,5 @@
+package com.example.locationbasedreminders.fragment
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
@@ -80,7 +82,7 @@ class LocationFragment : Fragment() {
                 showToast("Unable to retrieve location")
             }
         }.addOnFailureListener {
-            Log.e("LocationFragment", "Error getting location", it)
+            Log.e("com.example.locationbasedreminders.fragment.LocationFragment", "Error getting location", it)
         }
     }
 
