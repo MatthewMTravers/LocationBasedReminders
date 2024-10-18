@@ -33,6 +33,7 @@ class LoginFragment : Fragment() {
             if (username == "user" && password == "password") {
                 // Temporary success logic
                 Toast.makeText(activity, "Login successful!", Toast.LENGTH_SHORT).show()
+                (activity as LoginActivity).onLoginSuccess()
             } else {
                 // Temporary failure logic
                 Toast.makeText(activity, "Invalid credentials!", Toast.LENGTH_SHORT).show()

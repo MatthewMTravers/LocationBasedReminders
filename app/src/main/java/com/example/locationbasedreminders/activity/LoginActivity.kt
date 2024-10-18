@@ -1,11 +1,11 @@
 package com.example.locationbasedreminders.activity
 
-import AccountFragment
-import android.nfc.Tag
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.locationbasedreminders.R
+import com.example.locationbasedreminders.fragment.AccountFragment
 import com.example.locationbasedreminders.fragment.LoginFragment
 
 /* Main container for handling the login screen, handles the login and
@@ -30,6 +30,13 @@ class LoginActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, AccountFragment())
             .addToBackStack(null)
             .commit()
+    }
+
+    // Function to be called after successful login
+    fun onLoginSuccess() {
+        // Create an intent to start LocationActivity
+        val intent = Intent(this, LocationActivity::class.java)
+        startActivity(intent)
     }
 
     fun exitNewAccount(){

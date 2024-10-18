@@ -11,4 +11,8 @@
     <string name="clear">Clear</string>
     <string name="create">Create</string>
     <string name="exit">Exit</string>
+    <string name="current_location">Current Location</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="get_location">Get Location</string>
 </resources>
