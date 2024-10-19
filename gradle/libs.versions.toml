@@ -14,6 +14,9 @@ appcompat = "1.7.0"
 firebaseFirestoreKtx = "25.1.0"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
+cardview = "1.0.0"
+constraintlayout = "2.1.4"
+recyclerview = "1.3.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +40,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

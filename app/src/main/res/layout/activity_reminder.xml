@@ -1,33 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/reminder_fragment_container"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <!--Name-->
-    <TextView
-        android:id="@+id/reminder_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TODO: [REMINDER NAME]"
-        android:textStyle="bold"
-        android:textSize="18sp"/>
-
-    <!--Time&Location-->
-    <TextView
-        android:id="@+id/reminder_time_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Time: [insert time], Location: [insert location]"
-        android:textSize="14sp" />
-
-    <!--Description-->
-    <TextView
-        android:id="@+id/reminder_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description: [insert description]"
-        android:textSize="14sp"/>
-
-</LinearLayout>
+    android:layout_height="match_parent">
+</FrameLayout>
