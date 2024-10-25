@@ -8,10 +8,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.locationbasedreminders.R
 import com.example.locationbasedreminders.activity.LoginActivity
+import com.example.locationbasedreminders.model.LoginViewModel
 
 class LoginFragment : Fragment() {
+    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,19 +28,22 @@ class LoginFragment : Fragment() {
         val passwordEditText: EditText = view.findViewById(R.id.password_text)
         val loginButton: Button = view.findViewById(R.id.login_button)
 
+        // Observe login result from ViewModel
+        loginViewModel.loginResult.observe(viewLifecycleOwner) { isSuccess ->
+            if (isSuccess) {
+                Toast.makeText(activity, "Login successful!", Toast.LENGTH_SHORT).show()
+                (activity as LoginActivity).onLoginSuccess()
+            } else {
+                Toast.makeText(activity, "Invalid credentials!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         // Handle the login button click event
         loginButton.setOnClickListener {
             val username = usernameEditText.text.toString()
             val password = passwordEditText.text.toString()
-
-            if (username == "user" && password == "password") {
-                // Temporary success logic
-                Toast.makeText(activity, "Login successful!", Toast.LENGTH_SHORT).show()
-                (activity as LoginActivity).onLoginSuccess()
-            } else {
-                // Temporary failure logic
-                Toast.makeText(activity, "Invalid credentials!", Toast.LENGTH_SHORT).show()
-            }
+            loginViewModel.checkCredentials(username, password)
+            Toast.makeText(activity, "One moment while we check your credentials!", Toast.LENGTH_LONG).show()
         }
         return view
     }

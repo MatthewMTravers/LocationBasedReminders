@@ -87,4 +87,6 @@ dependencies {
     // Includes Maps SDK
     implementation(libs.play.services.maps.v1700)
 
+    implementation(libs.firebase.firestore.ktx.v2443)
+
 }

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.locationbasedreminders.R
 import com.example.locationbasedreminders.activity.LoginActivity
-import com.example.locationbasedreminders.viewmodel.AccountViewModel
+import com.example.locationbasedreminders.model.AccountViewModel
 
 class AccountFragment : Fragment(), View.OnClickListener {
     private val viewModel: AccountViewModel by viewModels()
@@ -20,9 +20,6 @@ class AccountFragment : Fragment(), View.OnClickListener {
     private lateinit var passwordConfirmEditText: EditText
     private lateinit var newUserButton: Button
     private lateinit var clearButton: Button
-    private lateinit var readButton: Button
-    private lateinit var updateButton: Button
-    private lateinit var deleteButton: Button
     private lateinit var exitButton: Button
 
 
@@ -42,29 +39,14 @@ class AccountFragment : Fragment(), View.OnClickListener {
         newUserButton = view.findViewById(R.id.create_button)
         newUserButton.setOnClickListener(this)
 
-        readButton = view.findViewById(R.id.read_button)
-        readButton.setOnClickListener(this)
-
-        updateButton = view.findViewById(R.id.update_button)
-        updateButton.setOnClickListener(this)
-
-        deleteButton = view.findViewById(R.id.delete_button)
-        deleteButton.setOnClickListener(this)
-
         exitButton = view.findViewById(R.id.exit_button)
-        exitButton.setOnClickListener {
-            // Call the parent activity method to handle exiting
-            (activity as LoginActivity).exitNewAccount()
-        }
+        exitButton.setOnClickListener { (activity as LoginActivity).exitNewAccount() }
 
-        observeViewModel()
-        return view
-    }
-
-    private fun observeViewModel() {
         viewModel.operationResult.observe(viewLifecycleOwner) { result ->
             Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
         }
+
+        return view
     }
 
     override fun onClick(view: View) {
@@ -74,12 +56,6 @@ class AccountFragment : Fragment(), View.OnClickListener {
                 passwordEditText.text.toString(),
                 passwordConfirmEditText.text.toString()
             )
-            R.id.read_button -> viewModel.getSingleUser()
-            R.id.update_button -> viewModel.updateSingleUser(
-                usernameEditText.text.toString(),
-                passwordEditText.text.toString()
-            )
-            R.id.delete_button -> viewModel.deleteAllDocumentsFromCollection()
             R.id.clear_button -> {
                 usernameEditText.text.clear()
                 passwordEditText.text.clear()
