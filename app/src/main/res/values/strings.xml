@@ -15,4 +15,5 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="get_location">Get Location</string>
+    <string name="google_maps_key">AIzaSyAtgBvBYar29BKTy6ikiNvTmwMJlkPQoCQ</string>
 </resources>

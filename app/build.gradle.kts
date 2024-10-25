@@ -83,4 +83,8 @@ dependencies {
 
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation(libs.firebase.analytics)
+
+    // Includes Maps SDK
+    implementation(libs.play.services.maps.v1700)
+
 }
