@@ -9,10 +9,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.example.locationbasedreminders.R
-import com.example.locationbasedreminders.activity.LocationActivity
 import com.example.locationbasedreminders.activity.LoginActivity
-import com.example.locationbasedreminders.activity.MapActivity
-import com.example.locationbasedreminders.activity.ReminderActivity
+import com.example.locationbasedreminders.activity.MapsActivity
 
 class ReminderFragment : Fragment() {
     lateinit var backButton : Button
@@ -34,7 +32,7 @@ class ReminderFragment : Fragment() {
         }
 
         newButton.setOnClickListener{
-            val intent = Intent(requireActivity(), MapActivity::class.java)
+            val intent = Intent(requireActivity(), MapsActivity::class.java)
             startActivity(intent)
         }
         return view

@@ -19,3 +19,7 @@ the read and update buttons for 'this.currentUserId'
 - When adding users and trying to log them ('READ'), search for "=>" this will show the pairs 
 added to the collection
 - It also takes a few seconds to load in the console after you click 'Create'
+
+API KEY (maps):
+- You need to make sure you create a variable in your secrets.properties to hold the API key so it 
+doesn't get published to github

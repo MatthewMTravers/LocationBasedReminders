@@ -34,8 +34,7 @@ class LoginActivity : AppCompatActivity() {
 
     // Function to be called after successful login
     fun onLoginSuccess() {
-        // Create an intent to start LocationActivity
-        val intent = Intent(this, ReminderActivity::class.java)
+        val intent = Intent(this, MapsActivity::class.java)
         startActivity(intent)
     }
 

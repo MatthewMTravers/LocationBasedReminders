@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -39,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -74,19 +76,18 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))
-
-    // Used for location services
     implementation(libs.play.services.location)
-
-    // When using the BoM, don't specify versions in Firebase dependencies
     implementation(libs.firebase.analytics)
-
-    // Includes Maps SDK
     implementation(libs.play.services.maps.v1700)
-
+    implementation(libs.gms.play.services.maps.v1700)
     implementation(libs.firebase.firestore.ktx.v2443)
+    implementation(libs.play.services.maps)
+}
 
+secrets {
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
+    ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
+    ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
 }
