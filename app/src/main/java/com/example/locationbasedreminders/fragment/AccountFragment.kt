@@ -146,6 +146,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
     // TEMPORARY: performs a 'READ' and logs current users
     private fun getSingleUser() {
         db.collection("users")
+            
             .get()
             .addOnSuccessListener { result ->
                 Log.d(TAG, "SINGLE VALUE:")
