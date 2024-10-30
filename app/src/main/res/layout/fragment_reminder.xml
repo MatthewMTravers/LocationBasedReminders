@@ -46,7 +46,19 @@
             android:background="@android:color/darker_gray"
             android:text="New"
             android:textColor="@android:color/white" />
+
+        <!--Find Location Button-->
+        <Button
+            android:id="@+id/findLocationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/darker_gray"
+            android:text="Find Location"
+            android:textColor="@android:color/white" />
+
     </LinearLayout>
+
 
 <!--    //TODO: THIS IS WHERE SINGLE REMINDER WAS INSERTED-->
 

@@ -27,6 +27,7 @@ import com.example.locationbasedreminders.reminder.*
 class ReminderFragment : Fragment() {
     lateinit var backButton : Button
     lateinit var newButton : Button
+    lateinit var findLocationButton : Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var reminderAdapter: ReminderAdapter
     private val reminders = mutableListOf<Reminder>()
@@ -51,6 +52,7 @@ class ReminderFragment : Fragment() {
 
         backButton = view.findViewById(R.id.reminderBackButton)
         newButton = view.findViewById(R.id.newReminderButton)
+        findLocationButton = view.findViewById(R.id.findLocationButton)
         backButton.setOnClickListener{
             val intent = Intent(requireActivity(), LoginActivity::class.java)
             startActivity(intent)
@@ -59,12 +61,11 @@ class ReminderFragment : Fragment() {
             showAddReminderDialog()
         }
 
+        findLocationButton.setOnClickListener{
+            val intent = Intent(requireActivity(), LocationActivity::class.java)
+            startActivity(intent)
+        }
 
-//TODO: Repurpose for FIND_LOC button
-//        newButton.setOnClickListener{
-//            val intent = Intent(requireActivity(), LocationActivity::class.java)
-//            startActivity(intent)
-//        }
         return view
     }
 
