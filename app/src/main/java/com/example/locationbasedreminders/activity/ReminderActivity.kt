@@ -11,6 +11,8 @@ import com.example.locationbasedreminders.fragment.LoginFragment
 import com.example.locationbasedreminders.fragment.ReminderFragment
 //import com.example.locationbasedreminders.database.Database
 
+
+
 /* Main container for handling the login screen, handles the login and
 registration fragments of the log in functionality */
 
@@ -27,6 +29,9 @@ class ReminderActivity : AppCompatActivity() {
                 .replace(R.id.reminder_fragment_container, ReminderFragment())
                 .commitNow()
         }
+
+
+
     }
 
 
