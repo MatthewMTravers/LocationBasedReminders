@@ -23,6 +23,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 import com.example.locationbasedreminders.reminder.*
 
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+
 
 class ReminderFragment : Fragment() {
     lateinit var backButton : Button
@@ -32,8 +35,8 @@ class ReminderFragment : Fragment() {
     private lateinit var reminderAdapter: ReminderAdapter
     private val reminders = mutableListOf<Reminder>()
 
-    //TODO: Add new button in hotbar (FIND_LOC), and
-    //lateinit var newButton : Button
+
+
 
 
 
