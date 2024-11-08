@@ -52,7 +52,8 @@ data class Reminder(
     var time: Date,
     var location: Location,
     var description: String,
-    var name: String)
+    var name: String,
+    var userID : Int)
 
 data class Date(var day: String, var hour: Int, var minute: Int)
 

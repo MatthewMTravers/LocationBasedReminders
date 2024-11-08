@@ -11,53 +11,117 @@
         android:id="@+id/topBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical"
         android:background="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!--Back Button-->
-        <Button
-            android:id="@+id/reminderBackButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/darker_gray"
-            android:text="Back"
-            android:textColor="@android:color/white" />
-
-        <!--Reminder List-->
+        <!-- Title Section -->
         <TextView
-            android:id="@+id/reminderListTitle"
-            android:layout_width="0dp"
+            android:id="@+id/reminderDashboardTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
             android:gravity="center"
-            android:text="Reminder List"
-            android:textColor="@android:color/white" />
+            android:padding="16dp"
+            android:text="Reminder Dashboard"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-        <!--New Reminder Button-->
-        <Button
-            android:id="@+id/newReminderButton"
-            android:layout_width="wrap_content"
+        <!-- Button Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/darker_gray"
-            android:text="New"
-            android:textColor="@android:color/white" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <!--Find Location Button-->
-        <Button
-            android:id="@+id/findLocationButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/darker_gray"
-            android:text="Find Location"
-            android:textColor="@android:color/white" />
+            <!-- Back Button -->
+            <Button
+                android:id="@+id/reminderBackButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/darker_gray"
+                android:text="Back"
+                android:textColor="@android:color/white" />
 
+            <!-- New Reminder Button -->
+            <Button
+                android:id="@+id/newReminderButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/darker_gray"
+                android:text="New"
+                android:textColor="@android:color/white" />
+
+            <!-- Find Location Button -->
+            <Button
+                android:id="@+id/findLocationButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/darker_gray"
+                android:text="Find Location"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
     </LinearLayout>
+
+
+    <!--    -->
+<!--    &lt;!&ndash;Top Nav Bar&ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/topBar"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:background="?attr/colorPrimary"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent">-->
+
+<!--        &lt;!&ndash;Back Button&ndash;&gt;-->
+<!--        <Button-->
+<!--            android:id="@+id/reminderBackButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:background="@android:color/darker_gray"-->
+<!--            android:text="Back"-->
+<!--            android:textColor="@android:color/white" />-->
+
+<!--        &lt;!&ndash;Reminder List&ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/reminderListTitle"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_weight="1"-->
+<!--            android:gravity="center"-->
+<!--            android:text="Reminder List"-->
+<!--            android:textColor="@android:color/white" />-->
+
+<!--        &lt;!&ndash;New Reminder Button&ndash;&gt;-->
+<!--        <Button-->
+<!--            android:id="@+id/newReminderButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:background="@android:color/darker_gray"-->
+<!--            android:text="New"-->
+<!--            android:textColor="@android:color/white" />-->
+
+<!--        &lt;!&ndash;Find Location Button&ndash;&gt;-->
+<!--        <Button-->
+<!--            android:id="@+id/findLocationButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:background="@android:color/darker_gray"-->
+<!--            android:text="Find Location"-->
+<!--            android:textColor="@android:color/white" />-->
+
+<!--    </LinearLayout>-->
 
 
 <!--    //TODO: THIS IS WHERE SINGLE REMINDER WAS INSERTED-->
