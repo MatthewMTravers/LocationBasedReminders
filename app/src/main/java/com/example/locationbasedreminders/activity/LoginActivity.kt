@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.locationbasedreminders.R
 import com.example.locationbasedreminders.fragment.AccountFragment
 import com.example.locationbasedreminders.fragment.LoginFragment
-import com.example.locationbasedreminders.fragment.ReminderFragment
 
 /* Main container for handling the login screen, handles the login and
 registration fragments of the log in functionality */
@@ -23,10 +22,6 @@ class LoginActivity : AppCompatActivity() {
                 .replace(R.id.fragment_container, LoginFragment())
                 .commitNow()
         }
-//
-//        //TODO: Remove this, this is just to jump to reminder activity for testing.
-//        val intent = Intent(this, ReminderActivity::class.java)
-//        startActivity(intent)
 
     }
 

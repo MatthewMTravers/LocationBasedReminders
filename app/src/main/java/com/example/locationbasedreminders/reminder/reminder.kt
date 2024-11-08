@@ -1,6 +1,4 @@
 package com.example.locationbasedreminders.reminder
-import java.time.*
-import java.time.format.DateTimeFormatter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.locationbasedreminders.R
+
+/*
+*Reminder adapter for the recycler view
+*/
 
 class ReminderAdapter(private val reminders: List<Reminder>) : RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
 
@@ -21,7 +23,9 @@ class ReminderAdapter(private val reminders: List<Reminder>) : RecyclerView.Adap
         holder.bind(reminder)
     }
 
-    override fun getItemCount(): Int = reminders.size
+    override fun getItemCount(): Int{
+        return reminders.size
+    }
 
     class ReminderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val timeAndLocationTextView: TextView = itemView.findViewById(R.id.reminderTimeLoc)
@@ -29,20 +33,16 @@ class ReminderAdapter(private val reminders: List<Reminder>) : RecyclerView.Adap
         private val descriptionTextView: TextView = itemView.findViewById(R.id.reminderDesc)
 
         fun bind(reminder: Reminder) {
-            val nameText = "${reminder.name}"
+            val nameText = reminder.name
             nameTextView.text = nameText
-            
-            // Format the day and time
+
             val timeLocText = "Time: Day ${reminder.time.day}, ${reminder.time.hour}:${reminder.time.minute}, Location: (${reminder.location.lat}, ${reminder.location.long})"
             timeAndLocationTextView.text = timeLocText
 
-            // Set the description
-            descriptionTextView.text = "Description: ${reminder.description}"
+            descriptionTextView.text = "Description:" + reminder.description
         }
     }
 }
-
-
 
 /*
 * Data Definitions
