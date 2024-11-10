@@ -18,7 +18,6 @@ playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
 cardview = "1.0.0"
 constraintlayout = "2.1.4"
-playServicesMapsVersion = "19.0.0"
 recyclerview = "1.3.2"
 secretsGradlePlugin = "2.0.1"
 googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
@@ -51,9 +50,9 @@ play-services-maps = { group = "com.google.android.gms", name = "play-services-m
 androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 play-services-maps-v1700 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
-androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

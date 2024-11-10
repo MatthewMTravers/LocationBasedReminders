@@ -6,93 +6,78 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--Top Nav Bar-->
+    <!--nav bar: contains the title and the button bar-->
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical"
         android:background="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!--Back Button-->
-        <Button
-            android:id="@+id/reminderBackButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/darker_gray"
-            android:text="Back"
-            android:textColor="@android:color/white" />
-
-        <!--Reminder List-->
+        <!--title bar-->
         <TextView
-            android:id="@+id/reminderListTitle"
-            android:layout_width="0dp"
+            android:id="@+id/reminderDashboardTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
             android:gravity="center"
-            android:text="Reminder List"
-            android:textColor="@android:color/white" />
-
-        <!--New Reminder Button-->
-        <Button
-            android:id="@+id/newReminderButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/darker_gray"
-            android:text="New"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
-
-    <!--(DEMO) single reminder element-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/topBar"
-        tools:layout_editor_absoluteX="191dp">
-
-        <!--Name-->
-        <TextView
-            android:id="@+id/reminderName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TODO: [REMINDER NAME]"
-            android:textSize="18sp"
+            android:padding="16dp"
+            android:text="Reminder Dashboard"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
-        <!--Time&Location-->
-        <TextView
-            android:id="@+id/reminderTimeLoc"
-            android:layout_width="wrap_content"
+        <!--button bar-->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Time: [insert time], Location: [insert location]"
-            android:textSize="14sp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <!--Description-->
-        <TextView
-            android:id="@+id/reminderDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Description: [insert description]"
-            android:textSize="14sp" />
+            <!--back-->
+            <Button
+                android:id="@+id/reminderBackButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/darker_gray"
+                android:text="Back"
+                android:textColor="@android:color/white" />
 
+            <!--new-->
+            <Button
+                android:id="@+id/newReminderButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/darker_gray"
+                android:text="New"
+                android:textColor="@android:color/white" />
+
+            <!--find loc-->
+            <Button
+                android:id="@+id/findLocationButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/darker_gray"
+                android:text="Find Location"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!--TODO: Implement recycler view for dynamic list -->
-<!--    &lt;!&ndash;Reminder List&ndash;&gt;-->
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/reminderRecyclerView"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/topBar"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent"/>-->
+    <!--recycler view for reminder list-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reminderRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:listitem="@layout/reminder"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

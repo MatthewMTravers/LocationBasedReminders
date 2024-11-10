@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--dialog box that opens when you hit new reminder. Linear layout with a set of inline edit texts-->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/reminderNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Reminder Name" />
+
+        <EditText
+            android:id="@+id/reminderDayInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Day" />
+
+        <EditText
+            android:id="@+id/reminderHourInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Hour" />
+
+        <EditText
+            android:id="@+id/reminderMinuteInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Minute" />
+
+        <EditText
+            android:id="@+id/reminderLatInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Latitude" />
+
+        <EditText
+            android:id="@+id/reminderLongInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Longitude" />
+
+        <EditText
+            android:id="@+id/reminderDescriptionInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
