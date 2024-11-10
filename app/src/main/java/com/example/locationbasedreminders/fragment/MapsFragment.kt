@@ -70,7 +70,16 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         mMap = googleMap
 
         if (hasLocationPermission()) {
-            findLocation()
+            // Check for background location permission if fine location is already granted
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // Request background location permission
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            } else {
+                findLocation() // Proceed with finding location
+            }
         } else {
             requestLocationPermission()
         }
@@ -80,7 +89,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             .position(osu)
             .title("The Ohio State University").snippet("Lat: ${osu.latitude}, Lng: ${osu.longitude}"))
         addGeofence(osu, "OSU_GEOFENCE")
-
     }
 
     // Checks if the app has permission to access fine location
@@ -151,8 +159,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         mMap.addCircle(
             CircleOptions()
                 .center(location)
-                .radius(geofenceRadius.toDouble()) // Convert radius to double
-                .strokeWidth(2f)
+                .radius(geofenceRadius.toDouble())
+                .strokeWidth(3f)
+                .strokeColor(0xFF0000FF.toInt())
+                .fillColor(0x550000FF)
         )
     }
 }

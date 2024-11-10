@@ -22,14 +22,14 @@ import com.google.firebase.ktx.Firebase
 import android.widget.EditText
 
 class ReminderFragment : Fragment() {
-    lateinit var backButton : Button
-    lateinit var newButton : Button
-    lateinit var findLocationButton : Button
+    private lateinit var backButton : Button
+    private lateinit var newButton : Button
+    private lateinit var findLocationButton : Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var reminderAdapter: ReminderAdapter
     private val reminders = mutableListOf<Reminder>()
-    val db = Firebase.firestore
-    val userID: Int = 123456
+    private val db = Firebase.firestore
+    private val userID: Int = 123456
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

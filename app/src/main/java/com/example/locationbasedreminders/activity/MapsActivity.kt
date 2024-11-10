@@ -27,7 +27,8 @@ class MapsActivity : AppCompatActivity() {
         }
 
         reminderButton.setOnClickListener {
-            // TODO
+            val intent = Intent(this, ReminderActivity::class.java)
+            startActivity(intent)
         }
 
         profileButton.setOnClickListener {
