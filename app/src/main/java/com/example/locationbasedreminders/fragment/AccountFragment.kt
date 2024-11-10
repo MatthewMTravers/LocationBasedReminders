@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import com.example.locationbasedreminders.R
 import com.example.locationbasedreminders.activity.LoginActivity
 import com.example.locationbasedreminders.model.AccountViewModel
+import androidx.navigation.fragment.findNavController
 
 class AccountFragment : Fragment(), View.OnClickListener {
     private val viewModel: AccountViewModel by viewModels()
@@ -46,6 +47,12 @@ class AccountFragment : Fragment(), View.OnClickListener {
             Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
         }
 
+//        viewModel.navigateToLogin.observe(viewLifecycleOwner) { navigate ->
+//            if (navigate == true) {
+//                findNavController().navigate(R.id.login_activity)
+//                viewModel.resetNavigation()
+//            }
+//        }
         return view
     }
 

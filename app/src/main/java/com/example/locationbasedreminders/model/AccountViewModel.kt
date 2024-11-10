@@ -10,7 +10,9 @@ import java.util.UUID
 class AccountViewModel : ViewModel() {
     private val db = Firebase.firestore
     private val _operationResult = MutableLiveData<String>()
+    private val _navigateToLogin = MutableLiveData<Boolean>()
     val operationResult: LiveData<String> = _operationResult
+    val navigateToLogin: LiveData<Boolean> = _navigateToLogin
 
     private var currentUserId: String = ""
 
@@ -56,44 +58,54 @@ class AccountViewModel : ViewModel() {
 //            }
 //    }
 //
-//    fun updateSingleUser(username: String, password: String) {
-//        db.collection("users")
-//            .whereEqualTo("userId", currentUserId)
-//            .get()
-//            .addOnSuccessListener { result ->
-//                for (document in result) {
-//                    db.collection("users").document(document.id)
-//                        .update("username", username, "password", password)
-//                        .addOnSuccessListener {
-//                            _operationResult.value = "User updated successfully!"
-//                        }
-//                        .addOnFailureListener { e ->
-//                            _operationResult.value = "Error updating user: ${e.message}"
-//                        }
-//                }
-//            }
-//            .addOnFailureListener { e ->
-//                _operationResult.value = "Error fetching user for update: ${e.message}"
-//            }
-//    }
-//
-//    fun deleteAllDocumentsFromCollection() {
-//        db.collection("users")
-//            .get()
-//            .addOnSuccessListener { result ->
-//                for (document in result) {
-//                    db.collection("users").document(document.id).delete()
-//                        .addOnSuccessListener {
-//                            Log.d("TAG", "Document with ID ${document.id} deleted")
-//                        }
-//                        .addOnFailureListener { e ->
-//                            Log.d("TAG", "Error deleting document: $e")
-//                        }
-//                }
-//                _operationResult.value = "All documents deleted"
-//            }
-//            .addOnFailureListener { e ->
-//                _operationResult.value = "Error fetching documents: ${e.message}"
-//            }
-//    }
+    fun updateSingleUser(username: String, password: String) {
+        db.collection("users")
+            .whereEqualTo("userId", currentUserId)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    db.collection("users").document(document.id)
+                        .update("username", username, "password", password)
+                        .addOnSuccessListener {
+                            _operationResult.value = "User updated successfully!"
+                            _navigateToLogin.value = true
+                        }
+                        .addOnFailureListener { e ->
+                            _operationResult.value = "Error updating user: ${e.message}"
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                _operationResult.value = "Error fetching user for update: ${e.message}"
+            }
+    }
+
+    fun deleteCurrentUser() {
+        if (currentUserId.isEmpty()) {
+            _operationResult.value = "Error: User ID not found."
+            return
+        }
+
+        db.collection("users")
+            .whereEqualTo("userId", currentUserId)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    db.collection("users").document(document.id).delete()
+                        .addOnSuccessListener {
+                            _operationResult.value = "User deleted successfully!"
+                        }
+                        .addOnFailureListener { e ->
+                            _operationResult.value = "Error deleting user: ${e.message}"
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                _operationResult.value = "Error fetching user for deletion: ${e.message}"
+            }
+    }
+
+    fun resetNavigation() {
+        _navigateToLogin.value = false
+    }
 }
