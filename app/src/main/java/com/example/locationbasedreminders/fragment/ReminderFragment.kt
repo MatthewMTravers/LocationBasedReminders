@@ -21,7 +21,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import android.widget.EditText
 
-class ReminderFragment : Fragment() {
+//implement the reminder deletion interface implemented in reminder.kt, so that it is visible to both classes
+class ReminderFragment : Fragment(), ReminderDeletion {
     lateinit var backButton : Button
     lateinit var newButton : Button
     lateinit var findLocationButton : Button
@@ -39,7 +40,7 @@ class ReminderFragment : Fragment() {
         Log.d("Startup", "Intentionally empty")
 
         recyclerView = view.findViewById(R.id.reminderRecyclerView)
-        reminderAdapter = ReminderAdapter(reminders)
+        reminderAdapter = ReminderAdapter(reminders, this)
         recyclerView.adapter = reminderAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -103,14 +104,13 @@ class ReminderFragment : Fragment() {
             .add(reminder)
             .addOnSuccessListener { documentReference ->
                 Toast.makeText(requireActivity(), "Reminder created successfully with ID: ${documentReference.id}", Toast.LENGTH_SHORT).show()
+                reminder.reminderFirebaseID = documentReference.id
             }
             .addOnFailureListener { e ->
                 Toast.makeText(requireActivity(), "Error creating reminder: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
-
-    
     private fun loadRemindersFromFirebase() {
         db.collection("reminders")
             .whereEqualTo("userID", userID)
@@ -118,11 +118,12 @@ class ReminderFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 reminders.clear()
                 for (document in documents) {
-
                     val reminder = document.toObject(Reminder::class.java)
+                    reminder.reminderFirebaseID = document.id
                     reminders.add(reminder)
+
                 }
-                //Notify that data has changed, and update recycler view.
+                //notify that data has changed, and update recycler view.
                 reminderAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { e ->
@@ -130,8 +131,21 @@ class ReminderFragment : Fragment() {
             }
     }
 
+    override fun deleteReminder(reminder: Reminder, pos: Int) {
+        //Remove reminder from reminders list; update recyclerview
+        reminders.removeAt(pos)
+        reminderAdapter.notifyDataSetChanged()
 
-
-
-
+        //delete reminder from firebase
+        if (reminder.reminderFirebaseID != "") {
+            val id = reminder.reminderFirebaseID
+            db.collection("reminders").document(id).delete()
+                .addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Reminder deleted from Firebase", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(requireContext(), "Error deleting reminder: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
 }
