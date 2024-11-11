@@ -16,4 +16,12 @@
     <string name="longitude">Longitude</string>
     <string name="get_location">Get Location</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="back">Back</string>
+    <string name="reminders">Reminders</string>
+    <string name="profile">Profile</string>
+    <string name="update">Update</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="reminder_dashboard">Reminder Dashboard</string>
+    <string name="new_reminder">New</string>
+    <string name="find_location">Find Location</string>
 </resources>

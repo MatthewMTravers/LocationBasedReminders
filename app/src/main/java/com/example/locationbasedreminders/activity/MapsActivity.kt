@@ -23,7 +23,8 @@ class MapsActivity : AppCompatActivity() {
         profileButton = findViewById(R.id.mapsProfile)
 
         backButton.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
 
         reminderButton.setOnClickListener {

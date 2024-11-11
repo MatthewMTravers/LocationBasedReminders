@@ -51,12 +51,21 @@
         android:weightSum="2"
         android:layout_marginTop="16dp">
         <Button
+            android:id="@+id/profileBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:paddingHorizontal="16dp"
+            android:text="@string/back"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@android:color/white"/>
+        <Button
             android:id="@+id/updateProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:paddingHorizontal="16dp"
-            android:text="Update Profile"
+            android:text="@string/update"
             android:backgroundTint="@color/colorAccent"
             android:textColor="@android:color/white"/>
         <Button
@@ -65,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:paddingHorizontal="16dp"
-            android:text="Delete Account"
+            android:text="@string/delete_account"
             android:backgroundTint="@color/danger"
             android:textColor="@android:color/white"/>
     </LinearLayout>

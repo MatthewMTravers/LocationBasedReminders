@@ -1,5 +1,6 @@
 package com.example.locationbasedreminders.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.locationbasedreminders.R
+import com.example.locationbasedreminders.activity.MapsActivity
 import com.example.locationbasedreminders.model.AccountViewModel
 
 class ProfileFragment : Fragment() {
@@ -18,6 +20,7 @@ class ProfileFragment : Fragment() {
     private lateinit var passwordEditText: EditText
     private lateinit var updateButton: Button
     private lateinit var deleteButton: Button
+    private lateinit var backButton: Button
     private val viewModel: AccountViewModel by viewModels()
 
     override fun onCreateView(
@@ -30,6 +33,7 @@ class ProfileFragment : Fragment() {
         passwordEditText = view.findViewById(R.id.editTextPassword)
         updateButton = view.findViewById(R.id.updateProfile)
         deleteButton = view.findViewById(R.id.deleteAccount)
+        backButton = view.findViewById(R.id.profileBack)
 
 
         // Set a click listener for the update button
@@ -47,6 +51,11 @@ class ProfileFragment : Fragment() {
         }
 
         deleteButton.setOnClickListener { viewModel.deleteCurrentUser() }
+
+        backButton.setOnClickListener {
+            val intent = Intent(requireActivity(), MapsActivity::class.java)
+            startActivity(intent)
+        }
 
         return view
     }

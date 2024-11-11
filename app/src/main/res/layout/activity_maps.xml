@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Back"
+            android:text="@string/back"
             android:textColor="@color/colorPrimary" />
 
         <Button
@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Reminders"
+            android:text="@string/reminders"
             android:textColor="@color/colorPrimaryDark" />
 
         <Button
@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Profile"
+            android:text="@string/profile"
             android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
