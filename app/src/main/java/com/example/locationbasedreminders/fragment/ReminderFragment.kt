@@ -58,6 +58,7 @@ class ReminderFragment : Fragment() {
             val intent = Intent(requireActivity(), LocationActivity::class.java)
             startActivity(intent)
         }
+        loadRemindersFromFirebase()
 
         return view
     }
@@ -107,5 +108,30 @@ class ReminderFragment : Fragment() {
                 Toast.makeText(requireActivity(), "Error creating reminder: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
+
+    
+    private fun loadRemindersFromFirebase() {
+        db.collection("reminders")
+            .whereEqualTo("userID", userID)
+            .get()
+            .addOnSuccessListener { documents ->
+                reminders.clear()
+                for (document in documents) {
+
+                    val reminder = document.toObject(Reminder::class.java)
+                    reminders.add(reminder)
+                }
+                //Notify that data has changed, and update recycler view.
+                reminderAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireActivity(), "Error fetching reminders: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+
+
 
 }

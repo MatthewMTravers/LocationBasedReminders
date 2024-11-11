@@ -34,10 +34,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.LocationActivity"
             android:exported="true"
             android:theme="@style/AppTheme" />
+
         <activity
             android:name=".activity.ReminderActivity"
             android:exported="true"
