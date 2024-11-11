@@ -49,12 +49,20 @@ class ReminderAdapter(private val reminders: List<Reminder>) : RecyclerView.Adap
 */
 
 data class Reminder(
-    var time: Date,
-    var location: Location,
-    var description: String,
-    var name: String,
-    var userID : Int)
+    var time: Date = Date("MISSING", 0, 0),
+    var location: Location = Location(0.0f, 0.0f),
+    var description: String = "",
+    var name: String = "",
+    var userID: Int = 0
+)
 
-data class Date(var day: String, var hour: Int, var minute: Int)
+data class Date(
+    var day: String = "MISSING",
+    var hour: Int = 0,
+    var minute: Int = 0
+)
 
-data class Location(var lat: Float, var long: Float)
+data class Location(
+    var lat: Float = 0.0f,
+    var long: Float = 0.0f
+)
