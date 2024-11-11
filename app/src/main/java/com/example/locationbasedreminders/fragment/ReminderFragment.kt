@@ -14,12 +14,15 @@ import androidx.fragment.app.Fragment
 import com.example.locationbasedreminders.R
 import com.example.locationbasedreminders.activity.LocationActivity
 import com.example.locationbasedreminders.activity.LoginActivity
+import com.example.locationbasedreminders.fragment.MapsFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.locationbasedreminders.reminder.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import android.widget.EditText
+import com.example.locationbasedreminders.activity.MapsActivity
+import java.util.UUID
 
 class ReminderFragment : Fragment() {
     private lateinit var backButton : Button
@@ -47,13 +50,14 @@ class ReminderFragment : Fragment() {
         newButton = view.findViewById(R.id.newReminderButton)
         findLocationButton = view.findViewById(R.id.findLocationButton)
         backButton.setOnClickListener{
-            val intent = Intent(requireActivity(), LoginActivity::class.java)
+            val intent = Intent(requireActivity(), MapsActivity::class.java)
             startActivity(intent)
         }
         newButton.setOnClickListener{
             showAddReminderDialog()
         }
 
+        //TODO: TEMPORARY, DON'T NEED HERE
         findLocationButton.setOnClickListener{
             val intent = Intent(requireActivity(), LocationActivity::class.java)
             startActivity(intent)
@@ -82,15 +86,23 @@ class ReminderFragment : Fragment() {
         val latitude = dialogView.findViewById<EditText>(R.id.reminderLatInput).text.toString().toFloatOrNull() ?: 0.0f
         val longitude = dialogView.findViewById<EditText>(R.id.reminderLongInput).text.toString().toFloatOrNull() ?: 0.0f
         val description = dialogView.findViewById<EditText>(R.id.reminderDescriptionInput).text.toString()
+        val geofenceID = UUID.randomUUID().toString()
 
         val time = Date(day, hour, minute)
         val location = Location(latitude, longitude)
-        val reminder = Reminder(time, location, description, name, userID)
+        val reminder = Reminder(time, location, description, name, userID, geofenceID)
 
         reminders.add(reminder)
         reminderAdapter.notifyItemInserted(reminders.size - 1)
 
         saveReminderToFirebase(reminder)
+
+        // Find MapsFragment and call addMarker
+        //TODO: Fix -> cannot get fragment correctly
+        val fragmentManager = requireActivity().supportFragmentManager
+        val mapsFragment = fragmentManager.findFragmentById(R.id.map_fragment_container) as? MapsFragment
+        mapsFragment?.addMarkerAndGeofence(reminder) ?: Log.e("ReminderFragment", "MapsFragment is null.")
+
     }
     //click handle for cancel (simply closes the dialogue window)
     private fun onCancelClick(dialog: DialogInterface) {

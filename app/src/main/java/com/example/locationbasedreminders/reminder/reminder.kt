@@ -53,7 +53,8 @@ data class Reminder(
     var location: Location,
     var description: String,
     var name: String,
-    var userID : Int)
+    var userID: Int,
+    var geofenceID: String)
 
 data class Date(var day: String, var hour: Int, var minute: Int)
 
