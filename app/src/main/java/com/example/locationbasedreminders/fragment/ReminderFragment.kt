@@ -110,6 +110,7 @@ class ReminderFragment : Fragment() {
     }
 
 
+    
     private fun loadRemindersFromFirebase() {
         db.collection("reminders")
             .whereEqualTo("userID", userID)
