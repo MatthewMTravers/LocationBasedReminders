@@ -17,7 +17,6 @@ import androidx.activity.result.contract.ActivityResultContracts.RequestPermissi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.locationbasedreminders.R
-import com.example.locationbasedreminders.activity.MapsActivity
 import com.example.locationbasedreminders.activity.ReminderActivity
 import com.google.android.gms.location.LocationServices
 

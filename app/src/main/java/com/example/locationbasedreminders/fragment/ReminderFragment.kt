@@ -13,8 +13,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.locationbasedreminders.R
 import com.example.locationbasedreminders.activity.LocationActivity
-import com.example.locationbasedreminders.activity.LoginActivity
-import com.example.locationbasedreminders.fragment.MapsFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.locationbasedreminders.reminder.*
