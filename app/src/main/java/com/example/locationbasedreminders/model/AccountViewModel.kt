@@ -26,24 +26,40 @@ class AccountViewModel : ViewModel() {
             return
         }
 
-        currentUserId = UUID.randomUUID().toString()
-        val user = hashMapOf(
-            "userId" to currentUserId,
-            "username" to username,
-            "password" to password
-        )
-
+        // Check if the username already exists
         db.collection("users")
-            .add(user)
-            .addOnSuccessListener {
-                _operationResult.value = "User created successfully with ID: $currentUserId"
+            .whereEqualTo("username", username)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    // Username is already taken
+                    _operationResult.value = "Username already exists!"
+                } else {
+                    // Proceed with account creation if the username is unique
+                    currentUserId = UUID.randomUUID().toString()
+                    val user = hashMapOf(
+                        "userId" to currentUserId,
+                        "username" to username,
+                        "password" to password
+                    )
+
+                    db.collection("users")
+                        .add(user)
+                        .addOnSuccessListener {
+                            _operationResult.value = "User created successfully with ID: $currentUserId"
+                        }
+                        .addOnFailureListener { e ->
+                            _operationResult.value = "Error creating user: ${e.message}"
+                        }
+                }
             }
             .addOnFailureListener { e ->
-                _operationResult.value = "Error creating user: ${e.message}"
+                _operationResult.value = "Error checking username: ${e.message}"
             }
     }
 
-//    fun getSingleUser() {
+
+    //    fun getSingleUser() {
 //        db.collection("users")
 //            .whereEqualTo("userId", currentUserId)
 //            .get()
