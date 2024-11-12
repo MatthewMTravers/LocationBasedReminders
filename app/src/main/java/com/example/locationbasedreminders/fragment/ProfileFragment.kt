@@ -16,6 +16,8 @@ import com.example.locationbasedreminders.model.AccountViewModel
 
 class ProfileFragment : Fragment() {
 
+    private lateinit var usernameEditTextOld: EditText
+    private lateinit var passwordEditTextOld: EditText
     private lateinit var usernameEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var updateButton: Button
@@ -29,6 +31,8 @@ class ProfileFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
+        usernameEditTextOld = view.findViewById(R.id.usernameOld)
+        passwordEditTextOld = view.findViewById(R.id.passwordOld)
         usernameEditText = view.findViewById(R.id.editTextUsername)
         passwordEditText = view.findViewById(R.id.editTextPassword)
         updateButton = view.findViewById(R.id.updateProfile)
@@ -38,6 +42,8 @@ class ProfileFragment : Fragment() {
 
         // Set a click listener for the update button
         updateButton.setOnClickListener {
+            val oldUsername = usernameEditTextOld.text.toString()
+            val oldPassword = passwordEditTextOld.text.toString()
             val newUsername = usernameEditText.text.toString()
             val newPassword = passwordEditText.text.toString()
 
@@ -46,7 +52,8 @@ class ProfileFragment : Fragment() {
                 Toast.makeText(requireContext(), "Fields cannot be empty", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                viewModel.updateSingleUser(newUsername, newPassword)
+                viewModel.updateSingleUser(oldUsername,
+                    newUsername, oldPassword, newPassword)
             }
         }
 
@@ -59,4 +66,13 @@ class ProfileFragment : Fragment() {
 
         return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.operationResult.observe(viewLifecycleOwner) { message ->
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }

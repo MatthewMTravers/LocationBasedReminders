@@ -73,28 +73,57 @@ class AccountViewModel : ViewModel() {
 //                _operationResult.value = "Error fetching user: ${e.message}"
 //            }
 //    }
-//
-    fun updateSingleUser(username: String, password: String) {
+    fun getUserId(username: String, onComplete: (String?) -> Unit) {
         db.collection("users")
-            .whereEqualTo("userId", currentUserId)
+            .whereEqualTo("username", username)
             .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    db.collection("users").document(document.id)
-                        .update("username", username, "password", password)
-                        .addOnSuccessListener {
-                            _operationResult.value = "User updated successfully!"
-                            _navigateToLogin.value = true
-                        }
-                        .addOnFailureListener { e ->
-                            _operationResult.value = "Error updating user: ${e.message}"
-                        }
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    val document = documents.first()
+                    val userId = document.getString("userId")
+                    onComplete(userId)  // Pass the userId back to the caller
+                } else {
+                    onComplete(null)  // No matching username found
                 }
             }
-            .addOnFailureListener { e ->
-                _operationResult.value = "Error fetching user for update: ${e.message}"
+            .addOnFailureListener {
+                onComplete(null)  // Error occurred while fetching user
             }
     }
+
+    fun updateSingleUser(oldUserName: String, newUsername: String, oldPassword: String, newPassword: String) {
+        getUserId(oldUserName) { userId ->
+            if (userId != null) {
+                // Proceed with updating using the fetched userId
+                db.collection("users")
+                    .whereEqualTo("userId", userId)
+                    .get()
+                    .addOnSuccessListener { result ->
+                        for (document in result) {
+                            val updates = mutableMapOf<String, Any>()
+                            updates["username"] = newUsername
+                            updates["password"] = newPassword
+
+                            db.collection("users").document(document.id)
+                                .update(updates)
+                                .addOnSuccessListener {
+                                    _operationResult.value = "User updated successfully!"
+                                    _navigateToLogin.value = true
+                                }
+                                .addOnFailureListener { e ->
+                                    _operationResult.value = "Error updating user: ${e.message}"
+                                }
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        _operationResult.value = "Error fetching user for update: ${e.message}"
+                    }
+            } else {
+                _operationResult.value = "Error: User not found. Please check the username."
+            }
+        }
+    }
+
 
     fun deleteCurrentUser() {
         if (currentUserId.isEmpty()) {
