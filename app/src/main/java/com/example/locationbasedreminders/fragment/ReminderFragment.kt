@@ -18,9 +18,7 @@ import com.example.locationbasedreminders.reminder.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import android.widget.EditText
-import androidx.lifecycle.ViewModelProvider
 import com.example.locationbasedreminders.activity.MapsActivity
-import com.example.locationbasedreminders.model.SharedViewModel
 import java.util.UUID
 
 //implement the reminder deletion interface implemented in reminder.kt, so that it is visible to both classes
@@ -31,7 +29,6 @@ class ReminderFragment : Fragment(), ReminderDeletion {
     private lateinit var recyclerView: RecyclerView
     private lateinit var reminderAdapter: ReminderAdapter
     private val reminders = mutableListOf<Reminder>()
-    private lateinit var sharedViewModel: SharedViewModel
     private val db = Firebase.firestore
     private val userID: Int = 123456
 
@@ -41,7 +38,6 @@ class ReminderFragment : Fragment(), ReminderDeletion {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_reminder, container, false)
 
-        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         recyclerView = view.findViewById(R.id.reminderRecyclerView)
         reminderAdapter = ReminderAdapter(reminders, this)
         recyclerView.adapter = reminderAdapter
@@ -92,8 +88,6 @@ class ReminderFragment : Fragment(), ReminderDeletion {
         val time = Date(day, hour, minute)
         val location = Location(latitude, longitude)
         val reminder = Reminder(time, location, description, name, userID, geofenceID)
-
-        sharedViewModel.selectReminder(reminder)
 
         reminders.add(reminder)
         reminderAdapter.notifyItemInserted(reminders.size - 1)

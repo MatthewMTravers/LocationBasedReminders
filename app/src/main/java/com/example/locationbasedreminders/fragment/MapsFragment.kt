@@ -11,15 +11,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.locationbasedreminders.GeofenceBroadcastReceiver
 import com.example.locationbasedreminders.R
-import com.example.locationbasedreminders.model.SharedViewModel
-import com.example.locationbasedreminders.reminder.Date
+import com.example.locationbasedreminders.model.MapsViewModel
 import com.example.locationbasedreminders.reminder.Reminder
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
@@ -39,9 +37,10 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private var mDefaultLocation = LatLng(40.0, -83.0125)
     private var mLocation: Location? = null
     private lateinit var geofencingClient: GeofencingClient
-    private lateinit var sharedViewModel: SharedViewModel
-    private val geofenceRadius = 50f
+    private lateinit var mapsViewModel: MapsViewModel
+    private val geofenceRadius = 150f
     private lateinit var geofencePendingIntent: PendingIntent
+    private val addedReminders = mutableSetOf<String>()
 
     // Registers the callback for handling location permission requests
     private val requestPermissionLauncher = registerForActivityResult(
@@ -61,26 +60,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
 
         geofencingClient = LocationServices.getGeofencingClient(requireActivity())
-        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+        mapsViewModel = ViewModelProvider(requireActivity())[MapsViewModel::class.java]
 
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map_fragment_container) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        //TODO: PROBLEM HERE
-        sharedViewModel.selectedReminder.observe(viewLifecycleOwner) { reminder ->
-            Log.d("===>", "got inside")
-            if (reminder != null) {
-                Log.d("MapsFragment", "New reminder observed: $reminder")
-                addMarkerAndGeofence(reminder)
-            }
-        }
     }
 
     // Called when the map is ready, sets up markers and location permission
@@ -109,12 +95,23 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             requestLocationPermission()
         }
 
+        // Standard marker for school
         val osu = LatLng(40.0, -83.0125)
         mMap.addMarker(MarkerOptions()
             .position(osu)
             .title("The Ohio State University")
             .snippet("Lat: ${osu.latitude}, Lng: ${osu.longitude}")
         )
+
+        // Add reminders to map and track status
+        mapsViewModel.reminders.observe(viewLifecycleOwner) { reminders ->
+            reminders.forEach { reminder ->
+                if (!addedReminders.contains(reminder.reminderFirebaseID)) {
+                    addMarkerAndGeofence(reminder)
+                    addedReminders.add(reminder.reminderFirebaseID)
+                }
+            }
+        }
     }
 
     // Checks if the app has permission to access fine location
@@ -138,21 +135,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 mLocation = location
                 val userLocation = LatLng(location.latitude, location.longitude)
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 1f))
-
-                //TODO: TEMPORARY CODE TO TEST GEOFENCE
-                val testReminder = Reminder(
-                    time = Date("Wednesday", 3, 30),
-                    location = com.example.locationbasedreminders.reminder.Location(
-                        40.002300f,
-                        -83.015800f
-                    ),
-                    description = "Walk dog when you get home",
-                    name = "House",
-                    userID = 0,
-                    reminderFirebaseID = "123456",
-                    geofenceID = "999"
-                )
-                addMarkerAndGeofence(testReminder)
             } else {
                 Log.d("MapsFragment", "Unable to retrieve location; using default")
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 1f))
@@ -209,25 +191,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             }
             addOnFailureListener { e ->
                 Log.e("MapsFragment", "Error adding geofence: ${e.message}")
-            }
-        }
-
-        //TODO: TEMPORARILY CHECKS IF THE USER IS IN THE ZONE - LOCAL TESTING
-        if (mLocation != null) {
-            val userLocation = Location("user")
-            userLocation.latitude = mLocation!!.latitude
-            userLocation.longitude = mLocation!!.longitude
-
-            val geofenceCenter = Location("geofence")
-            geofenceCenter.latitude = reminder.location.lat.toDouble()
-            geofenceCenter.longitude = reminder.location.long.toDouble()
-
-            val distance = userLocation.distanceTo(geofenceCenter)
-
-            if (distance <= geofenceRadius) {
-                Toast.makeText(requireContext(), "User is inside the geofence zone! ${reminder.description}", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(requireContext(), "User is outside the geofence zone. Distance: $distance meters.", Toast.LENGTH_LONG).show()
             }
         }
     }
