@@ -3,6 +3,7 @@ package com.example.locationbasedreminders.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.locationbasedreminders.reminder.Reminder
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.UUID
@@ -11,8 +12,10 @@ class AccountViewModel : ViewModel() {
     private val db = Firebase.firestore
     private val _operationResult = MutableLiveData<String>()
     private val _navigateToLogin = MutableLiveData<Boolean>()
+    private val _reminderLiveData = MutableLiveData<Reminder?>()
     val operationResult: LiveData<String> = _operationResult
     val navigateToLogin: LiveData<Boolean> = _navigateToLogin
+    val reminderLiveData: LiveData<Reminder?> = _reminderLiveData
 
     private var currentUserId: String = ""
 
@@ -58,22 +61,8 @@ class AccountViewModel : ViewModel() {
             }
     }
 
-
-    //    fun getSingleUser() {
-//        db.collection("users")
-//            .whereEqualTo("userId", currentUserId)
-//            .get()
-//            .addOnSuccessListener { result ->
-//                for (document in result) {
-//                    Log.d("TAG", "${document.id} => ${document.data}")
-//                }
-//                _operationResult.value = "User fetched successfully"
-//            }
-//            .addOnFailureListener { e ->
-//                _operationResult.value = "Error fetching user: ${e.message}"
-//            }
-//    }
-    fun getUserId(username: String, onComplete: (String?) -> Unit) {
+    // Returns user based on username
+    private fun getUserId(username: String, onComplete: (String?) -> Unit) {
         db.collection("users")
             .whereEqualTo("username", username)
             .get()
@@ -81,15 +70,35 @@ class AccountViewModel : ViewModel() {
                 if (!documents.isEmpty) {
                     val document = documents.first()
                     val userId = document.getString("userId")
-                    onComplete(userId)  // Pass the userId back to the caller
+                    onComplete(userId)
                 } else {
-                    onComplete(null)  // No matching username found
+                    onComplete(null)
                 }
             }
             .addOnFailureListener {
-                onComplete(null)  // Error occurred while fetching user
+                onComplete(null)
             }
     }
+
+    // Returns reminder from geofenceId for user in notification
+    fun getReminderByGeofenceId(geofenceId: String, callback: (Reminder?) -> Unit) {
+        db.collection("reminders")
+            .whereEqualTo("geofenceId", geofenceId)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    callback(null)
+                } else {
+                    // Assuming only one reminder per geofenceId, get the first document
+                    val reminder = documents.documents[0].toObject(Reminder::class.java)
+                    callback(reminder)
+                }
+            }
+            .addOnFailureListener { _ ->
+                callback(null)
+            }
+    }
+
 
     fun updateSingleUser(oldUserName: String, newUsername: String, oldPassword: String, newPassword: String) {
         getUserId(oldUserName) { userId ->
@@ -124,13 +133,11 @@ class AccountViewModel : ViewModel() {
         }
     }
 
-
     fun deleteCurrentUser() {
         if (currentUserId.isEmpty()) {
             _operationResult.value = "Error: User ID not found."
             return
         }
-
         db.collection("users")
             .whereEqualTo("userId", currentUserId)
             .get()

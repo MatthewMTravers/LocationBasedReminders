@@ -84,11 +84,16 @@ dependencies {
     implementation(libs.gms.play.services.maps.v1700)
     implementation(libs.firebase.firestore.ktx.v2443)
     implementation(libs.play.services.maps)
-}
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.fragment.ktx.v151)
+    implementation(libs.gms.play.services.location.v1800)
+    implementation(libs.androidx.lifecycle.runtime.ktx.v287)}
 
 secrets {
     propertiesFileName = "secrets.properties"
     defaultPropertiesFileName = "local.defaults.properties"
-    ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
-    ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
+    ignoreList.add("keyToIgnore")
+    ignoreList.add("sdk.*")
 }

@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,9 @@ import com.example.locationbasedreminders.reminder.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import android.widget.EditText
+import androidx.lifecycle.ViewModelProvider
 import com.example.locationbasedreminders.activity.MapsActivity
+import com.example.locationbasedreminders.model.SharedViewModel
 import java.util.UUID
 
 //implement the reminder deletion interface implemented in reminder.kt, so that it is visible to both classes
@@ -30,6 +31,7 @@ class ReminderFragment : Fragment(), ReminderDeletion {
     private lateinit var recyclerView: RecyclerView
     private lateinit var reminderAdapter: ReminderAdapter
     private val reminders = mutableListOf<Reminder>()
+    private lateinit var sharedViewModel: SharedViewModel
     private val db = Firebase.firestore
     private val userID: Int = 123456
 
@@ -38,8 +40,8 @@ class ReminderFragment : Fragment(), ReminderDeletion {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_reminder, container, false)
-        Log.d("Startup", "Intentionally empty")
 
+        sharedViewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         recyclerView = view.findViewById(R.id.reminderRecyclerView)
         reminderAdapter = ReminderAdapter(reminders, this)
         recyclerView.adapter = reminderAdapter
@@ -56,7 +58,6 @@ class ReminderFragment : Fragment(), ReminderDeletion {
             showAddReminderDialog()
         }
 
-        //TODO: TEMPORARY, DON'T NEED HERE
         findLocationButton.setOnClickListener{
             val intent = Intent(requireActivity(), LocationActivity::class.java)
             startActivity(intent)
@@ -92,17 +93,12 @@ class ReminderFragment : Fragment(), ReminderDeletion {
         val location = Location(latitude, longitude)
         val reminder = Reminder(time, location, description, name, userID, geofenceID)
 
+        sharedViewModel.selectReminder(reminder)
+
         reminders.add(reminder)
         reminderAdapter.notifyItemInserted(reminders.size - 1)
 
         saveReminderToFirebase(reminder)
-
-        // Find MapsFragment and call addMarker
-        //TODO: Fix -> cannot get fragment correctly
-        val fragmentManager = requireActivity().supportFragmentManager
-        val mapsFragment = fragmentManager.findFragmentById(R.id.map_fragment_container) as? MapsFragment
-        mapsFragment?.addMarkerAndGeofence(reminder) ?: Log.e("ReminderFragment", "MapsFragment is null.")
-
     }
     //click handle for cancel (simply closes the dialogue window)
     private fun onCancelClick(dialog: DialogInterface) {
@@ -121,8 +117,6 @@ class ReminderFragment : Fragment(), ReminderDeletion {
             }
     }
 
-
-    
     private fun loadRemindersFromFirebase() {
         db.collection("reminders")
             .whereEqualTo("userID", userID)
