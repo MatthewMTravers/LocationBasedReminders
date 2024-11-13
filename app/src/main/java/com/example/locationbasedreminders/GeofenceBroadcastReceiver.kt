@@ -31,6 +31,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         val geofenceTransition = geofencingEvent.geofenceTransition
         val triggeringGeofences = geofencingEvent.triggeringGeofences
 
+        // Track whether the user is in a zone
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER || geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
             Log.d(TAG, "Geofence transition detected: $geofenceTransition")
 
@@ -54,6 +55,7 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
         }
     }
 
+    // Sends notification to the users device when they enter a geofence zone
     private fun sendNotification(context: Context, reminderTitle: String, reminderId: Int) {
         // Register with app's notification channel
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

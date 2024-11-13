@@ -16,6 +16,7 @@ class MapsViewModel : ViewModel() {
         fetchReminders()
     }
 
+    // Gets all reminders from database for MapsFragment to use for markers
     private fun fetchReminders() {
         db.collection("reminders")
             .get()
@@ -26,7 +27,6 @@ class MapsViewModel : ViewModel() {
                 _reminders.value = reminderList
             }
             .addOnFailureListener { _ ->
-                // Handle errors if needed
                 _reminders.value = emptyList()
             }
     }

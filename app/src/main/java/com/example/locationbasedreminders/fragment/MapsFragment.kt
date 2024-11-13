@@ -38,7 +38,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private var mLocation: Location? = null
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var mapsViewModel: MapsViewModel
-    private val geofenceRadius = 150f
+    private val geofenceRadius = 30f
     private lateinit var geofencePendingIntent: PendingIntent
     private val addedReminders = mutableSetOf<String>()
 
