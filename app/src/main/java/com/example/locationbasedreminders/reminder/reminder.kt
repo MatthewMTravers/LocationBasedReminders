@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.locationbasedreminders.R
-import com.example.locationbasedreminders.reminder.ReminderDeletion
 
 /*
 *Reminder adapter for the recycler view
@@ -52,7 +51,6 @@ class ReminderAdapter(private val reminders: List<Reminder>, private val reminde
                 reminderDeletion.deleteReminder(reminder, bindingAdapterPosition)
             }
         }
-
     }
 }
 
@@ -66,7 +64,8 @@ data class Reminder(
     var description: String = "",
     var name: String = "",
     var userID: Int = 0,
-    var reminderFirebaseID: String = ""
+    var reminderFirebaseID: String = "",
+    var geofenceID: String = ""
 )
 
 data class Date(

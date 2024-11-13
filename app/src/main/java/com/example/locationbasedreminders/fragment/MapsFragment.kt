@@ -14,8 +14,11 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.locationbasedreminders.GeofenceBroadcastReceiver
 import com.example.locationbasedreminders.R
+import com.example.locationbasedreminders.model.MapsViewModel
+import com.example.locationbasedreminders.reminder.Reminder
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
@@ -34,16 +37,16 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private var mDefaultLocation = LatLng(40.0, -83.0125)
     private var mLocation: Location? = null
     private lateinit var geofencingClient: GeofencingClient
-
-    // Initialize geofencing request code and intent
-    private val geofenceRadius = 100f // radius in meters
+    private lateinit var mapsViewModel: MapsViewModel
+    private val geofenceRadius = 150f
     private lateinit var geofencePendingIntent: PendingIntent
+    private val addedReminders = mutableSetOf<String>()
 
     // Registers the callback for handling location permission requests
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) { isGranted ->
         if (isGranted) {
-            findLocation() // Get location if permission is granted
+            findLocation()
         } else {
             Log.d("MapsFragment", "Location permission denied")
         }
@@ -57,6 +60,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
 
         geofencingClient = LocationServices.getGeofencingClient(requireActivity())
+        mapsViewModel = ViewModelProvider(requireActivity())[MapsViewModel::class.java]
 
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map_fragment_container) as SupportMapFragment
@@ -70,6 +74,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         mMap = googleMap
 
         if (hasLocationPermission()) {
+            // UI enhancements
+            mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isCompassEnabled = true
+            mMap.uiSettings.isZoomControlsEnabled = true
+            mMap.uiSettings.isMapToolbarEnabled = true
+            mMap.uiSettings.isTiltGesturesEnabled = true
+
             // Check for background location permission if fine location is already granted
             if (ContextCompat.checkSelfPermission(
                     requireContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION
@@ -78,17 +89,29 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 // Request background location permission
                 requestPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
             } else {
-                findLocation() // Proceed with finding location
+                findLocation()
             }
         } else {
             requestLocationPermission()
         }
 
+        // Standard marker for school
         val osu = LatLng(40.0, -83.0125)
         mMap.addMarker(MarkerOptions()
             .position(osu)
-            .title("The Ohio State University").snippet("Lat: ${osu.latitude}, Lng: ${osu.longitude}"))
-        addGeofence(osu, "OSU_GEOFENCE")
+            .title("The Ohio State University")
+            .snippet("Lat: ${osu.latitude}, Lng: ${osu.longitude}")
+        )
+
+        // Add reminders to map and track status
+        mapsViewModel.reminders.observe(viewLifecycleOwner) { reminders ->
+            reminders.forEach { reminder ->
+                if (!addedReminders.contains(reminder.reminderFirebaseID)) {
+                    addMarkerAndGeofence(reminder)
+                    addedReminders.add(reminder.reminderFirebaseID)
+                }
+            }
+        }
     }
 
     // Checks if the app has permission to access fine location
@@ -111,7 +134,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             if (location != null) {
                 mLocation = location
                 val userLocation = LatLng(location.latitude, location.longitude)
-                mMap.addMarker(MarkerOptions().position(userLocation).title("You are here"))
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 1f))
             } else {
                 Log.d("MapsFragment", "Unable to retrieve location; using default")
@@ -123,10 +145,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     }
 
     @SuppressLint("MissingPermission")
-    private fun addGeofence(location: LatLng, geofenceId: String) {
+    fun addMarkerAndGeofence(reminder: Reminder) {
+        val reminderPosition = LatLng(reminder.location.lat.toDouble(), reminder.location.long.toDouble())
+
+        //Add marker on map
+        mMap.addMarker(MarkerOptions()
+            .position(reminderPosition)
+            .title(reminder.name)
+            .snippet("Lat: ${reminder.location.lat}, Lng: ${reminder.location.long}")
+        )
+
+        //Create geofence and prepare to add
         val geofence = Geofence.Builder()
-            .setRequestId(geofenceId)
-            .setCircularRegion(location.latitude, location.longitude, geofenceRadius)
+            .setRequestId(reminder.geofenceID)
+            .setCircularRegion(reminder.location.lat.toDouble(), reminder.location.long.toDouble(), geofenceRadius)
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
             .build()
@@ -143,26 +175,23 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        //Add geofence and visual circle
         geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent).run {
             addOnSuccessListener {
                 Log.d("MapsFragment", "Geofence added successfully")
-                drawGeofenceCircle(location) // Call the method to draw the geofence circle
+
+                mMap.addCircle(
+                    CircleOptions()
+                        .center(reminderPosition)
+                        .radius(geofenceRadius.toDouble())
+                        .strokeWidth(3f)
+                        .strokeColor(0xFF0000FF.toInt())
+                        .fillColor(0x550000FF)
+                )
             }
             addOnFailureListener { e ->
                 Log.e("MapsFragment", "Error adding geofence: ${e.message}")
             }
         }
-    }
-
-    // Draw a circle around the geofence
-    private fun drawGeofenceCircle(location: LatLng) {
-        mMap.addCircle(
-            CircleOptions()
-                .center(location)
-                .radius(geofenceRadius.toDouble())
-                .strokeWidth(3f)
-                .strokeColor(0xFF0000FF.toInt())
-                .fillColor(0x550000FF)
-        )
     }
 }

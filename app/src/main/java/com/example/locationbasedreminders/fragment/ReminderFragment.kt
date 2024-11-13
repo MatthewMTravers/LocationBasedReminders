@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,19 +12,20 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.locationbasedreminders.R
 import com.example.locationbasedreminders.activity.LocationActivity
-import com.example.locationbasedreminders.activity.LoginActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.locationbasedreminders.reminder.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import android.widget.EditText
+import com.example.locationbasedreminders.activity.MapsActivity
+import java.util.UUID
 
 //implement the reminder deletion interface implemented in reminder.kt, so that it is visible to both classes
 class ReminderFragment : Fragment(), ReminderDeletion {
-    lateinit var backButton : Button
-    lateinit var newButton : Button
-    lateinit var findLocationButton : Button
+    private lateinit var backButton : Button
+    private lateinit var newButton : Button
+    private lateinit var findLocationButton : Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var reminderAdapter: ReminderAdapter
     private val reminders = mutableListOf<Reminder>()
@@ -37,7 +37,6 @@ class ReminderFragment : Fragment(), ReminderDeletion {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_reminder, container, false)
-        Log.d("Startup", "Intentionally empty")
 
         recyclerView = view.findViewById(R.id.reminderRecyclerView)
         reminderAdapter = ReminderAdapter(reminders, this)
@@ -48,7 +47,7 @@ class ReminderFragment : Fragment(), ReminderDeletion {
         newButton = view.findViewById(R.id.newReminderButton)
         findLocationButton = view.findViewById(R.id.findLocationButton)
         backButton.setOnClickListener{
-            val intent = Intent(requireActivity(), LoginActivity::class.java)
+            val intent = Intent(requireActivity(), MapsActivity::class.java)
             startActivity(intent)
         }
         newButton.setOnClickListener{
@@ -84,10 +83,11 @@ class ReminderFragment : Fragment(), ReminderDeletion {
         val latitude = dialogView.findViewById<EditText>(R.id.reminderLatInput).text.toString().toFloatOrNull() ?: 0.0f
         val longitude = dialogView.findViewById<EditText>(R.id.reminderLongInput).text.toString().toFloatOrNull() ?: 0.0f
         val description = dialogView.findViewById<EditText>(R.id.reminderDescriptionInput).text.toString()
+        val geofenceID = UUID.randomUUID().toString()
 
         val time = Date(day, hour, minute)
         val location = Location(latitude, longitude)
-        val reminder = Reminder(time, location, description, name, userID)
+        val reminder = Reminder(time, location, description, name, userID, geofenceID)
 
         reminders.add(reminder)
         reminderAdapter.notifyItemInserted(reminders.size - 1)
@@ -111,8 +111,6 @@ class ReminderFragment : Fragment(), ReminderDeletion {
             }
     }
 
-
-    
     private fun loadRemindersFromFirebase() {
         db.collection("reminders")
             .whereEqualTo("userID", userID)
