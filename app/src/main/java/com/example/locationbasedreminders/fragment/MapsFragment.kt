@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -191,6 +192,22 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             }
             addOnFailureListener { e ->
                 Log.e("MapsFragment", "Error adding geofence: ${e.message}")
+            }
+        }
+
+        // TODO: TEMPORARY
+        if (mLocation != null) {
+            val userLocation = Location("user")
+            userLocation.latitude = mLocation!!.latitude
+            userLocation.longitude = mLocation!!.longitude
+            val geofenceCenter = Location("geofence")
+            geofenceCenter.latitude = reminder.location.lat.toDouble()
+            geofenceCenter.longitude = reminder.location.long.toDouble()
+            val distance = userLocation.distanceTo(geofenceCenter)
+            if (distance <= geofenceRadius) {
+                Toast.makeText(requireContext(), "User is inside the geofence zone! ${reminder.description}", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(requireContext(), "User is outside the geofence zone. Distance: $distance meters.", Toast.LENGTH_LONG).show()
             }
         }
     }
