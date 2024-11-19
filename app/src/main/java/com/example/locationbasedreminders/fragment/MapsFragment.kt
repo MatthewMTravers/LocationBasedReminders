@@ -39,7 +39,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
     private var mLocation: Location? = null
     private lateinit var geofencingClient: GeofencingClient
     private lateinit var mapsViewModel: MapsViewModel
-    private val geofenceRadius = 30f
     private lateinit var geofencePendingIntent: PendingIntent
     private val addedReminders = mutableSetOf<String>()
 
@@ -156,10 +155,28 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             .snippet("Lat: ${reminder.location.lat}, Lng: ${reminder.location.long}")
         )
 
+        // TODO: TEMPORARY
+        if (mLocation != null) {
+            val userLocation = Location("user")
+            userLocation.latitude = mLocation!!.latitude
+            userLocation.longitude = mLocation!!.longitude
+            val geofenceCenter = Location("geofence")
+            geofenceCenter.latitude = reminder.location.lat.toDouble()
+            geofenceCenter.longitude = reminder.location.long.toDouble()
+            val distance = userLocation.distanceTo(geofenceCenter)
+            if (distance <= reminder.geofenceRadius) {
+                Toast.makeText(requireContext(), "User is inside the geofence zone! ${reminder.description}", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(requireContext(), "User is outside the geofence zone. Distance: $distance meters.", Toast.LENGTH_LONG).show()
+            }
+        }
+
         //Create geofence and prepare to add
         val geofence = Geofence.Builder()
             .setRequestId(reminder.geofenceID)
-            .setCircularRegion(reminder.location.lat.toDouble(), reminder.location.long.toDouble(), geofenceRadius)
+            .setCircularRegion(reminder.location.lat.toDouble(), reminder.location.long.toDouble(),
+                reminder.geofenceRadius
+            )
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER or Geofence.GEOFENCE_TRANSITION_EXIT)
             .build()
@@ -184,7 +201,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
                 mMap.addCircle(
                     CircleOptions()
                         .center(reminderPosition)
-                        .radius(geofenceRadius.toDouble())
+                        .radius(reminder.geofenceRadius.toDouble())
                         .strokeWidth(3f)
                         .strokeColor(0xFF0000FF.toInt())
                         .fillColor(0x550000FF)
@@ -192,22 +209,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
             }
             addOnFailureListener { e ->
                 Log.e("MapsFragment", "Error adding geofence: ${e.message}")
-            }
-        }
-
-        // TODO: TEMPORARY
-        if (mLocation != null) {
-            val userLocation = Location("user")
-            userLocation.latitude = mLocation!!.latitude
-            userLocation.longitude = mLocation!!.longitude
-            val geofenceCenter = Location("geofence")
-            geofenceCenter.latitude = reminder.location.lat.toDouble()
-            geofenceCenter.longitude = reminder.location.long.toDouble()
-            val distance = userLocation.distanceTo(geofenceCenter)
-            if (distance <= geofenceRadius) {
-                Toast.makeText(requireContext(), "User is inside the geofence zone! ${reminder.description}", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(requireContext(), "User is outside the geofence zone. Distance: $distance meters.", Toast.LENGTH_LONG).show()
             }
         }
     }

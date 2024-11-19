@@ -65,7 +65,8 @@ data class Reminder(
     var name: String = "",
     var userID: Int = 0,
     var reminderFirebaseID: String = "",
-    var geofenceID: String = ""
+    var geofenceID: String = "",
+    var geofenceRadius: Float = 40f // meters
 )
 
 data class Date(

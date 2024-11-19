@@ -15,43 +15,49 @@
             android:id="@+id/reminderNameInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Reminder Name" />
+            android:hint="@string/reminder_name" />
 
         <EditText
             android:id="@+id/reminderDayInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Day" />
+            android:hint="@string/day" />
 
         <EditText
             android:id="@+id/reminderHourInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Hour" />
+            android:hint="@string/hour" />
 
         <EditText
             android:id="@+id/reminderMinuteInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Minute" />
+            android:hint="@string/minute" />
 
         <EditText
             android:id="@+id/reminderLatInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Latitude" />
+            android:hint="@string/latitude_reminder" />
 
         <EditText
             android:id="@+id/reminderLongInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Longitude" />
+            android:hint="@string/longitude_reminder" />
+
+        <EditText
+            android:id="@+id/reminderGeofenceRadius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/geofence_radius" />
 
         <EditText
             android:id="@+id/reminderDescriptionInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description" />
+            android:hint="@string/description" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

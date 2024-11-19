@@ -82,12 +82,15 @@ class ReminderFragment : Fragment(), ReminderDeletion {
         val minute = dialogView.findViewById<EditText>(R.id.reminderMinuteInput).text.toString().toIntOrNull() ?: 0
         val latitude = dialogView.findViewById<EditText>(R.id.reminderLatInput).text.toString().toFloatOrNull() ?: 0.0f
         val longitude = dialogView.findViewById<EditText>(R.id.reminderLongInput).text.toString().toFloatOrNull() ?: 0.0f
+        val geofenceRadius = dialogView.findViewById<EditText>(R.id.reminderGeofenceRadius).text.toString().toFloatOrNull() ?: 0.0f
         val description = dialogView.findViewById<EditText>(R.id.reminderDescriptionInput).text.toString()
         val geofenceID = UUID.randomUUID().toString()
 
         val time = Date(day, hour, minute)
         val location = Location(latitude, longitude)
-        val reminder = Reminder(time, location, description, name, userID, geofenceID)
+        val reminder = Reminder(
+            time, location, description, name, userID, "", geofenceID, geofenceRadius
+        )
 
         reminders.add(reminder)
         reminderAdapter.notifyItemInserted(reminders.size - 1)
