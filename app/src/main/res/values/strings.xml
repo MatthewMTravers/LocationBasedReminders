@@ -25,4 +25,12 @@
     <string name="new_reminder">New</string>
     <string name="find_location">Find Location</string>
     <string name="UpdateNotice">Note: It may take up to 5 minutes for updates to take effect.</string>
+    <string name="reminder_name">Reminder Name</string>
+    <string name="day">Day</string>
+    <string name="hour">Hour</string>
+    <string name="minute">Minute</string>
+    <string name="latitude_reminder">Latitude</string>
+    <string name="longitude_reminder">Longitude</string>
+    <string name="geofence_radius">Geofence Radius (m)</string>
+    <string name="description">Description</string>
 </resources>
