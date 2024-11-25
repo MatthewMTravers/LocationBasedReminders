@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -137,8 +138,10 @@ class ReminderFragment : Fragment(), ReminderDeletion {
 
     override fun deleteReminder(reminder: Reminder, pos: Int) {
         //Remove reminder from reminders list; update recyclerview
+        Log.d("EFFICIENCY_TEST_START", "")
         reminders.removeAt(pos)
-        reminderAdapter.notifyDataSetChanged()
+        //reminderAdapter.notifyDataSetChanged()
+        reminderAdapter.notifyItemRemoved(pos)
 
         //delete reminder from firebase
         if (reminder.reminderFirebaseID != "") {
@@ -151,5 +154,6 @@ class ReminderFragment : Fragment(), ReminderDeletion {
                     Toast.makeText(requireContext(), "Error deleting reminder: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
+        Log.d("EFFICIENCY_TEST_END", "")
     }
 }

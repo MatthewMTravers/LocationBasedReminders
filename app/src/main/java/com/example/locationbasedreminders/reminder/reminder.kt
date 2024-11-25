@@ -64,8 +64,8 @@ data class Reminder(
     var description: String = "",
     var name: String = "",
     var userID: Int = 0,
-    var reminderFirebaseID: String = "",
-    var geofenceID: String = "",
+    var reminderFirebaseID: String = "123",
+    var geofenceID: String = "123",
     var geofenceRadius: Float = 40f // meters
 )
 

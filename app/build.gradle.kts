@@ -89,7 +89,13 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.fragment.ktx.v151)
     implementation(libs.gms.play.services.location.v1800)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v287)}
+    implementation(libs.androidx.lifecycle.runtime.ktx.v287)
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test:rules:1.6.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation ("androidx.test.uiautomator:uiautomator:2.3.0")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.5")
+    }
 
 secrets {
     propertiesFileName = "secrets.properties"
