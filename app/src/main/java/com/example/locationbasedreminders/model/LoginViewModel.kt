@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class LoginViewModel : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
+    private val accountViewModel = AccountViewModel()
 
     // LiveData for the login result
     private val _loginResult = MutableLiveData<Boolean>()
@@ -15,9 +16,10 @@ class LoginViewModel : ViewModel() {
 
     // Function to check credentials
     fun checkCredentials(username: String, password: String) {
+        val encryptedPassword = accountViewModel.sha256(password)
         firestore.collection("users")
             .whereEqualTo("username", username)
-            .whereEqualTo("password", password)
+            .whereEqualTo("password", encryptedPassword)
             .get()
             .addOnSuccessListener { documents ->
                 _loginResult.value = !documents.isEmpty

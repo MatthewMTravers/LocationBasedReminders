@@ -4,20 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.locationbasedreminders.reminder.Reminder
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.security.MessageDigest
 import java.util.UUID
 
-class AccountViewModel : ViewModel() {
-    private val db = Firebase.firestore
+class AccountViewModel(
+    private val db: FirebaseFirestore = Firebase.firestore
+) : ViewModel() {
+
     private val _operationResult = MutableLiveData<String>()
     private val _navigateToLogin = MutableLiveData<Boolean>()
-    private val _reminderLiveData = MutableLiveData<Reminder?>()
     val operationResult: LiveData<String> = _operationResult
-    val navigateToLogin: LiveData<Boolean> = _navigateToLogin
-    val reminderLiveData: LiveData<Reminder?> = _reminderLiveData
 
-    private var currentUserId: String = ""
+    var currentUserId: String = ""
 
     fun createAccount(username: String, password: String, passwordConfirm: String) {
         if (username.isEmpty() || password.isEmpty() || passwordConfirm.isEmpty()) {
@@ -40,10 +41,14 @@ class AccountViewModel : ViewModel() {
                 } else {
                     // Proceed with account creation if the username is unique
                     currentUserId = UUID.randomUUID().toString()
+
+                    // Encrypt password
+                    val encryptedPassword = sha256(password)
+
                     val user = hashMapOf(
                         "userId" to currentUserId,
                         "username" to username,
-                        "password" to password
+                        "password" to encryptedPassword
                     )
 
                     db.collection("users")
@@ -62,7 +67,7 @@ class AccountViewModel : ViewModel() {
     }
 
     // Returns user based on username
-    private fun getUserId(username: String, onComplete: (String?) -> Unit) {
+    fun getUserId(username: String, onComplete: (String?) -> Unit) {
         db.collection("users")
             .whereEqualTo("username", username)
             .get()
@@ -110,8 +115,9 @@ class AccountViewModel : ViewModel() {
                     .addOnSuccessListener { result ->
                         for (document in result) {
                             val updates = mutableMapOf<String, Any>()
+                            val encryptedPassword = sha256(newPassword)
                             updates["username"] = newUsername
-                            updates["password"] = newPassword
+                            updates["password"] = encryptedPassword
 
                             db.collection("users").document(document.id)
                                 .update(updates)
@@ -157,7 +163,8 @@ class AccountViewModel : ViewModel() {
             }
     }
 
-    fun resetNavigation() {
-        _navigateToLogin.value = false
+    fun sha256(input: String): String {
+        val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
     }
 }

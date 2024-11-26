@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.locationbasedreminders.R
 import com.example.locationbasedreminders.fragment.AccountFragment
 import com.example.locationbasedreminders.fragment.LoginFragment
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 /* Main container for handling the login screen, handles the login and
 registration fragments of the log in functionality */
@@ -22,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
                 .replace(R.id.fragment_container, LoginFragment())
                 .commitNow()
         }
+        Firebase.firestore
     }
 
     // Function to switch fragments (login to register, etc.)
