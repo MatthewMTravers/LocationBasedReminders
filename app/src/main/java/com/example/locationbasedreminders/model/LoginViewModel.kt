@@ -14,9 +14,13 @@ class LoginViewModel : ViewModel() {
     private val _loginResult = MutableLiveData<Boolean>()
     val loginResult: LiveData<Boolean> get() = _loginResult
 
+    var errorMessage: String? = null
+
     // Function to check credentials
     fun checkCredentials(username: String, password: String) {
         val encryptedPassword = accountViewModel.sha256(password)
+        errorMessage = null
+
         firestore.collection("users")
             .whereEqualTo("username", username)
             .whereEqualTo("password", encryptedPassword)
@@ -24,8 +28,9 @@ class LoginViewModel : ViewModel() {
             .addOnSuccessListener { documents ->
                 _loginResult.value = !documents.isEmpty
             }
-            .addOnFailureListener {
+            .addOnFailureListener { e ->
                 _loginResult.value = false
+                errorMessage = "No internet connection. Connect to the network before using the app"
             }
     }
 }
